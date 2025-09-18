@@ -9,7 +9,8 @@ weapon_list = {
     'stick': random.uniform(1.5, 2.5),
     'wooden_sword': random.uniform(2, 3),
     'copper_sword': random.uniform(3, 4.5),
-    'iron_sword': random.uniform(5, 7.5)
+    'iron_sword': random.uniform(5, 7.5),
+    'diamond_sword': random.uniform(6, 9),
 }
 potions_list = {
     'mushroom': 5,
@@ -17,6 +18,11 @@ potions_list = {
     'healing_potion': 25,
     'greater_healing_potion': 50,
     'super_healing_potion': 100,
+}
+materials_list = {
+    'copper_bar': 0,
+    'iron_bar': 1,
+    'diamond': 2,
 }
 
 name = input('Insert your character´s name: ')
@@ -140,7 +146,7 @@ while True:
             exp += exp_gained_slime
             inventory.append('mushroom')
             print('You got a mushroom!')
-            if random.uniform(0, 1) >= 0.333333:
+            if random.uniform(0, 1) <= 0.3333:
                 inventory.append('stick')
                 print('You got a stick!')
                 if inventory.count('stick') >= 2:
@@ -149,13 +155,29 @@ while True:
                             inventory.remove('stick')
                             inventory.append('wooden_sword')
                             print('-1 stick')
-                            print('You got a wooden sword')
+                            print('You got a wooden sword!')
             print(' ')
-                    
+            
             
         elif enemy['name'] == 'demon eye':
             exp_gained_demon_eye = round(random.uniform(0.35, 0.55) * exp_needed * math.sqrt(enemy['level'] ** 1.05))
             exp += exp_gained_demon_eye
+            if random.uniform(0, 1) <= 0.2:
+                inventory.append('copper')
+                print('You got a copper bar!')
+                if inventory.count('copper') >= 2 and inventory.count('stick') >= 1:
+                    if inventory.count('iron_sword') < 1:
+                        if input('Do you want to use 2 of your copper bars and a stick to make a copper sword\n(type anything for yes(spaces count) and press\n and press enter for no)?'):
+                            inventory.remove('stick')
+                            print('-1 stick')
+                            print(' ')
+                            inventory.remove('copper_bar')
+                            inventory.remove('copper_bar')
+                            print('-2 copper bars')
+                            print(' ')
+                            inventory.append('copper_sword')
+                            print('You got a copper sword!')
+
             
         elif enemy['name'] == 'zombie':
             exp_gained_zombie = round(random.uniform(0.50, 0.75) * exp_needed * math.sqrt(enemy['level'] ** 1.15))
