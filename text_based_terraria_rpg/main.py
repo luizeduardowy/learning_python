@@ -6,11 +6,12 @@ import math
 from clear import clear
 
 weapon_list = {
-    'stick': random.uniform(1.5, 2.5),
-    'wooden_sword': random.uniform(2, 3),
-    'copper_sword': random.uniform(3, 4.5),
-    'iron_sword': random.uniform(5, 7.5),
-    'diamond_sword': random.uniform(6, 9),
+    'stick': random.uniform(1.25, 1.625),
+    'wooden_sword': random.uniform(1.3125, 2.25),
+    'copper_sword': random.uniform(2.25, 3),
+    'zombie_arm': random.uniform(3, 4.25),
+    'iron_sword': random.uniform(4.5, 5.75),
+    'diamond_sword': random.uniform(6.125, 7.5),
 }
 potions_list = {
     'mushroom': 5,
@@ -29,9 +30,9 @@ name = input('Insert your character´s name: ')
 level = 1
 exp = 0
 exp_needed = 9 + (math.sqrt(level**np.e))
-max_health = round(10 + round(level ** 1.15) - math.sqrt(math.sqrt(level - level*(np.e/10))))
+max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))))
 health = copy.deepcopy(max_health)
-damage = round(random.uniform(1, 1.25) * (math.sqrt(level**1.2)))
+damage = round(random.uniform(0.850, 1.1825) * (math.sqrt(level**1.2)))
 inventory = ['stick']
 
 player = {
@@ -100,9 +101,9 @@ def use_potion(potion):
     print(' ')
 
 def enemy_attack(enemy_):
-    player['health'] -= enemy['damage']
+    player['health'] -= round(enemy['damage'])
     if enemy_ == 'slime':
-        print(f'Slime decides to attack {player['name']} by hopping')
+        print(f'Slime decides to attack {player['name']} by hopping onto him/her')
     elif enemy_ == 'demon eye':
         print(f'Demon eye decides to attack {player['name']} by hitting him/her')
     elif enemy_ == 'zombie':
@@ -122,12 +123,17 @@ def enemy_appear():
     print(f'A {enemy['name']} has appeared. What will you do?')
     print(f"{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}")
     print(f"{enemy['name'].capitalize()}´s level: {enemy['level']}")
+    print(' ')
+    print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
+    
+    print(' ')
     print(f'Options: ')
     print(' ')
 
 print(f'A {enemy['name']} has appeared. What will you do?')
 print(f'{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}')
 print(f'{enemy['name'].capitalize()}´s level: {enemy['level']}')
+print(' ')
 print(f'Options: ')
 while True:
     if health > max_health:
@@ -197,11 +203,14 @@ while True:
         elif enemy['name'] == 'zombie':
             exp_gained_zombie = round(random.uniform(0.50, 0.75) * exp_needed * math.sqrt(enemy['level'] ** 1.15))
             exp += exp_gained_zombie
+            if random.uniform(0, 1) <= 0.090625:
+                inventory.append('zombie_arm')
+                print('You got a zombie arm!')
         while exp >= exp_needed:
             exp -= exp_needed
             level += 1
             exp_needed = 9 + round(math.sqrt(level**np.e))
-            max_health = 9 + round(level ** 1.15) - math.sqrt(math.sqrt(level - level*(np.e/10)))
+            max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))))
             health = max_health
             damage = round(random.uniform(1, 1.25) * math.sqrt(level**1.2))
             print(f'You leveled up! You are now level {level}.')
@@ -214,7 +223,7 @@ while True:
             print(f'+{exp_gained_zombie} exp!')
             
         print(f'Exp: {exp}/{exp_needed}({round((exp/exp_needed)* 1000) / 10}%)')
-        max_health = 9 + round(level ** 1.15) - math.sqrt(math.sqrt(level - level*(np.e/10)))
+        max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))))
         player['level'] = level
         player['exp'] = exp
         player['exp_needed'] = exp_needed
@@ -235,7 +244,9 @@ while True:
             elif option == 'wooden_sword':
                 print(f'Attack the {enemy['name']} with your wooden sword(still just a fancy stick)')
             elif option == 'copper_sword':
-                print(f'Attack the {enemy['name']} with your copper sword')
+                print(f'Attack the {enemy['name']} with your zombie arm(gross)')
+            elif option == 'zombie_arm':
+                print(f'Attatck the {enemy['name']} with your copper sword')
             elif option == 'iron_sword':
                  print(f'Slice the {enemy['name']} with your iron sword')
         elif option in potions_list:
@@ -248,43 +259,72 @@ while True:
             elif option == 'super_healing_potion':
                 print(f'Drink a super healing potion("Legend says only those who are worthy can survive drinking it")')
     try:
-        item_chosen = input('Insert your choice here: ').lower()
-        item_chosen_replace = item_chosen.replace('_', ' ')
-        damage = round(random.uniform(1, 1.25) * (math.sqrt(level**1.2)) * weapon_list[item_chosen_replace])
-        player['damage'] = damage
-        player_damage_dealt = copy.deepcopy(player['damage'])
+        item_chosen = input('Insert your choice here: ')
+        item_chosen_lower = item_chosen.lower()
+        item_chosen_replace = item_chosen_lower.replace(' ', '_')
         
-        if item_chosen in weapon_list or item_chosen_replace in weapon_list:
+        if item_chosen_replace in weapon_list or item_chosen_replace in weapon_list:
             if item_chosen in inventory or item_chosen_replace in inventory:
-                item_chosen_replace = item_chosen.replace('_', ' ')
                 damage = round(random.uniform(1, 1.25) * (math.sqrt(level**1.2)) * weapon_list[item_chosen_replace])
+                player['damage'] = damage
+                player_damage_dealt = copy.deepcopy(player['damage'])
+
                 use_weapon(item_chosen_replace)
+
                 print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
                 enemy_attack(enemy['name'])
             else:
                 clear()
                 print('Please insert a valid option')
+                print(f"{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}")
+                print(f"{enemy['name'].capitalize()}´s level: {enemy['level']}")
+                print(' ')
+                print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
+    
+                print(' ')
+                print(f'Options: ')
+                print(' ')
                 continue
-        elif item_chosen in potions_list or item_chosen_replace in potions_list:
-            if item_chosen in inventory or item_chosen_replace in inventory:
-                item_chosen_replace = item_chosen.replace('_', ' ')
+        elif item_chosen_replace in potions_list or item_chosen_replace in potions_list:
+            if item_chosen_replace in inventory or item_chosen_replace in inventory:
+                item_chosen_replace = item_chosen_lower.replace(' ', '_')
                 use_potion(item_chosen_replace)
                 enemy_attack(enemy['name'])
             else:
                 clear()
                 print('Please insert a valid option')
+                print(f"{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}")
+                print(f"{enemy['name'].capitalize()}´s level: {enemy['level']}")
+                print(' ')
+                print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
+    
+                print(' ')
+                print(f'Options: ')
+                print(' ')
                 continue
         else:
             clear()
             print('Please insert a valid option')
+            print(f"{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}")
+            print(f"{enemy['name'].capitalize()}´s level: {enemy['level']}")
+            print(' ')
+            print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
+    
+            print(' ')
+            print(f'Options: ')
+            print(' ')
             continue
     
         print(f'What will you do?')
+        print(' ')
         print(f'{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}')
         print(f'{enemy['name'].capitalize()}´s level: {enemy['level']}')
+        print(' ')
         print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
         print(f'{player['name']}´s level: {player['level']}')
+        print(' ')
         print(f'Options: ')
+        print(' ')
     except KeyError:
         clear()
         print('Please insert a valid option')
