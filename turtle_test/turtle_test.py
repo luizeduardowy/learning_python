@@ -6,9 +6,7 @@ t.pensize(2)
 t.speed(5)
 
 def move_t_up():
-    t.speed(10)
     t.setheading(90)
-    t.speed(5)
     t.forward(25)
 
 def move_t_down():
