@@ -251,13 +251,13 @@ while True:
                  print(f'Slice the {enemy['name']} with your iron sword')
         elif option in potions_list:
             if option == 'mushroom':
-                print(f'Eat a mushroom(I don`t recommend doing that)')
+                print(f'Eat a mushroom(I don`t recommend doing that)({inventory.count('mushroom')}x)')
             elif option == 'lesser_healing_potion':
-                print(f'Drink a lesser healing potion')
+                print(f'Drink a lesser healing potion({inventory.count('lesser_healing_potion')})')
             elif option == 'healing_potion':
-                print(f'Drink a healing potion')
+                print(f'Drink a healing potion({inventory.count('healing_potion')}x)')
             elif option == 'super_healing_potion':
-                print(f'Drink a super healing potion("Legend says only those who are worthy can survive drinking it")')
+                print(f'Drink a super healing potion("Legend says only those who are worthy can survive drinking it")({inventory.count('super_healing_potion')}x)')
     try:
         item_chosen = input('Insert your choice here: ')
         item_chosen_lower = item_chosen.lower()
