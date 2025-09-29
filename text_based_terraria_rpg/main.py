@@ -5,27 +5,6 @@ import copy
 import math
 from clear import clear
 
-weapon_list = {
-    'stick': random.uniform(1.25, 1.625),
-    'wooden_sword': random.uniform(1.3125, 2.25),
-    'copper_sword': random.uniform(2.25, 3),
-    'zombie_arm': random.uniform(3, 4.25),
-    'iron_sword': random.uniform(4.5, 5.75),
-    'diamond_sword': random.uniform(6.125, 7.5),
-}
-potions_list = {
-    'mushroom': 5,
-    'lesser_healing_potion': 10,
-    'healing_potion': 25,
-    'greater_healing_potion': 50,
-    'super_healing_potion': 100,
-}
-materials_list = {
-    'copper_bar': 'copper_bar',
-    'iron_bar': 'iron_bar',
-    'diamond': 'diamond',
-}
-
 name = input('Insert your character´s name(Press enter to finish): ')
 level = 1
 exp = 0
@@ -45,6 +24,35 @@ player = {
     'exp_needed': exp_needed,
     'inventory': inventory
 }
+
+weapon_list = {
+    'stick': random.uniform(1.25, 1.625),
+    'wooden_sword': random.uniform(1.3125, 2.25),
+    'copper_sword': random.uniform(2.25, 3),
+    'zombie_arm': random.uniform(3, 4.25),
+    'iron_sword': random.uniform(4.5, 5.75),
+    'diamond_sword': random.uniform(6.125, 7.5),
+}
+potions_list = {
+    'mushroom': 5 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
+    'lesser_healing_potion': 10 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
+    'healing_potion': 25 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
+    'greater_healing_potion': 50 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
+    'super_healing_potion': 100 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
+}
+weapon_materials_list = {
+    'copper_bar': 'copper_bar',
+    'iron_bar': 'iron_bar',
+    'diamond': 'diamond',
+}
+
+potion_materials_list = {
+    'gel': 'gel',
+    'len': 'len',
+    'slime_len': 'slime_len',
+    'zombie_heart': 'zombie_heart',
+}
+
 def random_enemy(level):
     enemy = {}
     if level == 1:
@@ -134,12 +142,37 @@ def enemy_die():
             exp += exp_gained_slime
             inventory.append('mushroom')
             print('You got a mushroom!')
+            if random.uniform(0, 1) <= 0.5:
+                if round(random.uniform(1,2)) == 1:
+                    inventory.append('gel')
+                elif round(random.uniform(1,2)) == 2:
+                    inventory.append('gel')
+                    inventory.append('gel')
+                if inventory.count('gel') >= 2 and inventory.count('len'):
+                    try:
+                        craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the option exactly right with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything)')
+                        craft_option_lower = craft_option.lower()
+                        craft_option_replace = craft_option_lower.replace(' ', '_')
+                        if craft_option_replace:
+                            if craft_option_replace == 'slime_len':
+                                inventory.remove('gel')
+                                inventory.remove('gel')
+                                print('-2 gel')
+                                inventory.remove('len')
+                                print('-1 len')
+                                inventory.append('slime_len')
+                                print('You got a slime len!')
+                                if inventory.count('slime_len') >= 1 and inventory.count('gel') >= 1:
+                                    if input(f'Do you want to brew a healing potion...(not finished)'):
+                                        ...
+                    except ...:
+                        ...
             if random.uniform(0, 1) <= 0.3333:
                 inventory.append('stick')
                 print('You got a stick!')
                 if inventory.count('stick') >= 2:
                     if inventory.count('wooden_sword') < 1:
-                        if input('Do you want to use your 2 sticks to make a wooden sword(one of\nthe sticks is conserved in the process)(type anything for yes(spaces count)\nand press enter for no)? '):
+                        if input('Do you want to use your 2 sticks to make a wooden sword(one of\nthe sticks is conserved in the process)([type anything] for yes(spaces count)\nand press [enter] for no)? '):
                             inventory.remove('stick')
                             inventory.append('wooden_sword')
                             print('-1 stick')
