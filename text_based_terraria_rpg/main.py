@@ -130,6 +130,98 @@ def enemy_appear():
     print(f'Options: ')
     print(' ')
 
+def enemy_die():
+    if enemy_health_using['health'] > enemy['max_health']:
+        enemy_health_using['health'] = enemy['max_health']
+    elif enemy_health_using['health'] <= 0:
+        clear()
+        print('You have defeated the enemy')
+        print(' ')
+        if enemy['name'] == 'slime':
+            exp_gained_slime = round(random.uniform(0.25, 0.4) * exp_needed * math.sqrt(enemy['level']))
+            exp += exp_gained_slime
+            inventory.append('mushroom')
+            print('You got a mushroom!')
+            if random.uniform(0, 1) <= 0.3333:
+                inventory.append('stick')
+                print('You got a stick!')
+                if inventory.count('stick') >= 2:
+                    if inventory.count('wooden_sword') < 1:
+                        if input('Do you want to use your 2 sticks to make a wooden sword(one of\nthe sticks is conserved in the process)(type anything for yes(spaces count)\nand press enter for no)? '):
+                            inventory.remove('stick')
+                            inventory.append('wooden_sword')
+                            print('-1 stick')
+                            print('You got a wooden sword!')
+            print(' ')
+            
+            
+        elif enemy['name'] == 'demon eye':
+            exp_gained_demon_eye = round(random.uniform(0.35, 0.55) * exp_needed * math.sqrt(enemy['level'] ** 1.05))
+            exp += exp_gained_demon_eye
+            if random.uniform(0, 1) <= 0.2:
+                inventory.append('copper_bar')
+                print('You got a copper bar!')
+                if inventory.count('copper_bar') >= 2 and inventory.count('stick') >= 1:
+                    if inventory.count('copper_sword') < 1:
+                        if input('Do you want to use 2 of your copper bars and a stick to make an copper sword\n(type anything for yes(spaces count) and press\n and press enter for no)?'):
+                            inventory.remove('stick')
+                            print('-1 stick')
+                            print(' ')
+                            inventory.remove('copper_bar')
+                            inventory.remove('copper_bar')
+                            print('-2 copper bars')
+                            print(' ')
+                            inventory.append('copper_sword')
+                            print('You got an copper sword!')
+            elif random.uniform(0, 1) <= 0.05:
+                inventory.append('iron_bar')
+                print('You got a iron bar!')
+                if inventory.count('iron_bar') >= 2 and inventory.count('copper_sword') >= 1:
+                    if inventory.count('iron_sword') < 1:
+                        if input('Do you want to use 2 of your iron bars and your copper sword\n to make an iron sword(type anything for yes(spaces count) and\n press enter for no)?'):
+                            inventory.remove('copper_sword')
+                            print('-1 copper sword')
+                            print(' ')
+                            inventory.remove('iron_bar')
+                            inventory.remove('iron_bar')
+                            print('-2 iron bars')
+                            print(' ')
+                            inventory.append('iron_sword')
+                            print('You got an iron sword')
+
+            
+        elif enemy['name'] == 'zombie':
+            exp_gained_zombie = round(random.uniform(0.50, 0.75) * exp_needed * math.sqrt(enemy['level'] ** 1.15))
+            exp += exp_gained_zombie
+            if random.uniform(0, 1) <= 0.090625:
+                inventory.append('zombie_arm')
+                print('You got a zombie arm!')
+        while exp >= exp_needed:
+            exp -= exp_needed
+            level += 1
+            exp_needed = 9 + round(math.sqrt(level**np.e))
+            max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))))
+            health = max_health
+            damage = round(random.uniform(1, 1.25) * math.sqrt(level**1.2))
+            print(f'You leveled up! You are now level {level}.')
+
+        if enemy['name'] == 'slime':
+            print(f'+{exp_gained_slime} exp!')
+        elif enemy['name'] == 'demon eye':
+            print(f'+{exp_gained_demon_eye} exp!')
+        elif enemy['name'] == 'zombie':
+            print(f'+{exp_gained_zombie} exp!')
+            
+        print(f'Exp: {exp}/{exp_needed}({round((exp/exp_needed)* 1000) / 10}%)')
+        max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))))
+        player['level'] = level
+        player['exp'] = exp
+        player['exp_needed'] = exp_needed
+        player['max_health'] = max_health
+        player['damage'] = damage
+        player['inventory'] = inventory
+        enemy_appear()
+
 print(f'A {enemy['name']} has appeared. What will you do?')
 print(f'{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}')
 print(f'{enemy['name'].capitalize()}´s level: {enemy['level']}')
@@ -272,6 +364,7 @@ while True:
                 use_weapon(item_chosen_replace)
 
                 print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
+                enemy_die()
                 enemy_attack(enemy['name'])
             else:
                 clear()
@@ -289,6 +382,7 @@ while True:
             if item_chosen_replace in inventory or item_chosen_replace in inventory:
                 item_chosen_replace = item_chosen_lower.replace(' ', '_')
                 use_potion(item_chosen_replace)
+                enemy_die()
                 enemy_attack(enemy['name'])
             else:
                 clear()
