@@ -5,7 +5,7 @@ import copy
 import math
 from clear import clear
 
-name = input('Insert your character´s name(Press enter to finish): ')
+name = input('Insert your character´s name(Press enter to insert your name): ')
 level = 1
 exp = 0
 exp_needed = 9 + (math.sqrt(level**np.e))
@@ -120,7 +120,22 @@ def enemy_attack(enemy_):
     print(' ')
     print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
     print(' ')
+
+def enemy_appear():
+    global enemy, enemy_health_using
+    enemy = random_enemy(level)
+    enemy_health_using = {'health': enemy['health']}
     
+    print(f'A {enemy['name']} has appeared. What will you do?')
+    print(f"{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}")
+    print(f"{enemy['name'].capitalize()}´s level: {enemy['level']}")
+    print(' ')
+    print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
+    
+    print(' ')
+    print(' ')
+    print(' ') 
+
 def enemy_die():
     global level
     global exp
@@ -143,11 +158,13 @@ def enemy_die():
             inventory.append('mushroom')
             print('You got a mushroom!')
             if random.uniform(0, 1) <= 0.5:
-                if round(random.uniform(1,2)) == 1:
+                if round(random.uniform(1, 2)) == 1:
                     inventory.append('gel')
-                elif round(random.uniform(1,2)) == 2:
+                    print('+1 gel')
+                elif round(random.uniform(1, 2)) == 2:
                     inventory.append('gel')
                     inventory.append('gel')
+                    print('+2 gel')
                 if inventory.count('gel') >= 2 and inventory.count('len'):
                     try:
                         craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the option exactly right with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything)')
@@ -163,16 +180,32 @@ def enemy_die():
                                 inventory.append('slime_len')
                                 print('You got a slime len!')
                                 if inventory.count('slime_len') >= 1 and inventory.count('gel') >= 1:
-                                    if input(f'Do you want to brew a healing potion...(not finished)'):
-                                        ...
-                    except ...:
-                        ...
+                                    if input(f'Do you want to brew a healing potion with one slime len of yours and one gel\n([type anything] if yes(spaces count)\nand press [enter] if no)?'):
+                                        inventory.remove('slime_len')
+                                        print('-1 slime len')
+                                        inventory.remove('gel')
+                                        print('-1 gel')
+                                        inventory.append('healing_potion')
+                                        print('You got a healing potion!')
+                            elif craft_option_replace == 'lesser_healing_potion':
+                                inventory.remove('gel')
+                                inventory.remove('gel')
+                                print('-2 gel')
+                                inventory.remove('len')
+                                print('-1 len')
+                                inventory.append('lesser_healing_potion')
+                                print('You got a lesser healing potion!')
+                    except TypeError:
+                        print('Please insert a valid answer')
+                        print('It´s a TypeError')
+                            
+                                
             if random.uniform(0, 1) <= 0.3333:
                 inventory.append('stick')
                 print('You got a stick!')
                 if inventory.count('stick') >= 2:
                     if inventory.count('wooden_sword') < 1:
-                        if input('Do you want to use your 2 sticks to make a wooden sword(one of\nthe sticks is conserved in the process)([type anything] for yes(spaces count)\nand press [enter] for no)? '):
+                        if input('Do you want to use your 2 sticks to make a wooden sword(one of\nthe sticks is conserved in the process)([type anything] if yes(spaces count)\nand press [enter] if no)? '):
                             inventory.remove('stick')
                             inventory.append('wooden_sword')
                             print('-1 stick')
@@ -183,7 +216,43 @@ def enemy_die():
         elif enemy['name'] == 'demon eye':
             exp_gained_demon_eye = round(random.uniform(0.35, 0.55) * exp_needed * math.sqrt(enemy['level'] ** 1.05))
             exp += exp_gained_demon_eye
-            if random.uniform(0, 1) <= 0.2:
+            if random.uniform(0,1) <= 0.3333:
+                inventory.append('len')
+                print('You got a len!')
+                if inventory.count('gel') >= 2 and inventory.count('len'):
+                    try:
+                        craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the option exactly right with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything)')
+                        craft_option_lower = craft_option.lower()
+                        craft_option_replace = craft_option_lower.replace(' ', '_')
+                        if craft_option_replace:
+                            if craft_option_replace == 'slime_len':
+                                inventory.remove('gel')
+                                inventory.remove('gel')
+                                print('-2 gel')
+                                inventory.remove('len')
+                                print('-1 len')
+                                inventory.append('slime_len')
+                                print('You got a slime len!')
+                                if inventory.count('slime_len') >= 1 and inventory.count('gel') >= 1:
+                                    if input(f'Do you want to brew a healing potion with one slime len of yours and one gel\n([type anything] if yes(spaces count)\nand press [enter] if no)?'):
+                                        inventory.remove('slime_len')
+                                        print('-1 slime len')
+                                        inventory.remove('gel')
+                                        print('-1 gel')
+                                        inventory.append('healing_potion')
+                                        print('You got a healing potion!')
+                            elif craft_option_replace == 'lesser_healing_potion':
+                                inventory.remove('gel')
+                                inventory.remove('gel')
+                                print('-2 gel')
+                                inventory.remove('len')
+                                print('-1 len')
+                                inventory.append('lesser_healing_potion')
+                                print('You got a lesser healing potion!')
+                    except ValueError:
+                        print('Please insert a valid answer')
+                        print('It´s a ValueError')
+            elif random.uniform(0, 1) <= 0.2:
                 inventory.append('copper_bar')
                 print('You got a copper bar!')
                 if inventory.count('copper_bar') >= 2 and inventory.count('stick') >= 1:
@@ -246,45 +315,13 @@ def enemy_die():
         player['damage'] = damage
         player['inventory'] = inventory
         enemy_appear()
-        if enemy['name'] == 'slime':
-            print(f'+{exp_gained_slime} exp!')
-        elif enemy['name'] == 'demon eye':
-            print(f'+{exp_gained_demon_eye} exp!')
-        elif enemy['name'] == 'zombie':
-            print(f'+{exp_gained_zombie} exp!')
-            
-        print(f'Exp: {exp}/{exp_needed}({round((exp/exp_needed)* 1000) / 10}%)')
-        max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))))
-        player['level'] = level
-        player['exp'] = exp
-        player['exp_needed'] = exp_needed
-        player['max_health'] = max_health
-        player['damage'] = damage
-        player['inventory'] = inventory
-        enemy_appear()    
-
-def enemy_appear():
-    global enemy, enemy_health_using
-    enemy = random_enemy(level)
-    enemy_health_using = {'health': enemy['health']}
-    
-    print(f'A {enemy['name']} has appeared. What will you do?')
-    print(f"{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}")
-    print(f"{enemy['name'].capitalize()}´s level: {enemy['level']}")
-    print(' ')
-    print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
-    
-    print(' ')
-    print(f'Options: ')
-    print(' ')
-
-
+        
 
 print(f'A {enemy['name']} has appeared. What will you do?')
 print(f'{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}')
 print(f'{enemy['name'].capitalize()}´s level: {enemy['level']}')
 print(' ')
-print(f'Options: ')
+print('Options: ')
 while True:
     if health > max_health:
         health = max_health
@@ -335,7 +372,7 @@ while True:
 
                 print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
                 enemy_die()
-                enemy_attack(enemy['name'])
+                if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
             else:
                 clear()
                 print('Please insert a valid option')
@@ -353,7 +390,7 @@ while True:
                 item_chosen_replace = item_chosen_lower.replace(' ', '_')
                 use_potion(item_chosen_replace)
                 enemy_die()
-                enemy_attack(enemy['name'])
+                if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
             else:
                 clear()
                 print('Please insert a valid option')
