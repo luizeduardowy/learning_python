@@ -403,6 +403,41 @@ while True:
                 print(f'Options: ')
                 print(' ')
                 continue
+        for key, value in weapon_list:
+            if item_chosen_replace in key:
+                if key in inventory:
+                    damage = round(random.uniform(1, 1.25) * (math.sqrt(level**1.2)) * weapon_list[item_chosen_replace])
+                    player['damage'] = damage
+                    player_damage_dealt = copy.deepcopy(player['damage'])
+
+                    use_weapon(key)
+
+                    print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
+                    enemy_die()
+                    if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
+                    break
+        
+        else:
+            clear()
+            print('Please insert a valid option')
+            print(f"{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}")
+            print(f"{enemy['name'].capitalize()}´s level: {enemy['level']}")
+            print(' ')
+            print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
+    
+            print(' ')
+            print(f'Options: ')
+            print(' ')
+            continue
+
+        for key, value in potions_list:
+            if item_chosen_replace in key:
+                if key in inventory:
+                    item_chosen_replace = item_chosen_lower.replace(' ', '_')
+                    use_potion(item_chosen_replace)
+                    enemy_die()
+                    if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
+                    break
         else:
             clear()
             print('Please insert a valid option')
