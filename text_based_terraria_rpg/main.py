@@ -80,7 +80,7 @@ def random_enemy(level):
         'damage': enemy['damage'],
     }
 
-
+times_did_something_this_turn = 0
 
 enemy = random_enemy(level)
 enemy_health_using = {'health': enemy['health']}
@@ -88,6 +88,7 @@ enemy_health_using = {'health': enemy['health']}
 
 def use_weapon(weapon):
     clear()
+    times_did_something_this_turn = 1
     print(f'{name} decides to attack {enemy['name']} with a {weapon}')
     enemy_health_using['health'] -= player_damage_dealt
     print(f'{player['name']} dealt {player_damage_dealt} damage!')
@@ -96,12 +97,16 @@ def use_weapon(weapon):
 def use_potion(potion):
     global health
     clear()
+    base_heal = potions_list[potion]
+    bonus_heal = round(0.1 * round(math.sqrt(health**(1+(math.e/10)))))
+    total_heal = base_heal + bonus_heal
+    times_did_something_this_turn = 1
     if health >= max_health or health + potions_list[potion] > max_health:
         health = max_health
     elif health <= 0:
         print('You died 🪦')
     else:
-        health += potions_list[potion]
+        health += total_heal
     player['health'] = health
     print(f'{name} decides to use {potion}')
     print(f'{player['name']}´s health is now {player['health']}/{player["max_health"]}({round((player['health']/player["max_health"])*1000)/10}%)')
@@ -323,6 +328,7 @@ print(f'{enemy['name'].capitalize()}´s level: {enemy['level']}')
 print(' ')
 print('Options: ')
 while True:
+    option_possibilities = list([])
     if health > max_health:
         health = max_health
     elif health <= 0:
@@ -343,9 +349,9 @@ while True:
             elif option == 'wooden_sword':
                 print(f'Attack the {enemy['name']} with your [wooden sword](still just a fancy stick)')
             elif option == 'copper_sword':
-                print(f'Attack the {enemy['name']} with your [zombie arm](gross)')
+                print(f'Attack the {enemy['name']} with your [copper sword]')
             elif option == 'zombie_arm':
-                print(f'Attatck the {enemy['name']} with your [copper sword]')
+                print(f'Attatck the {enemy['name']} with your [zombie arm](gross)')
             elif option == 'iron_sword':
                  print(f'Slice the {enemy['name']} with your [iron sword]')
         elif option in potions_list:
@@ -358,6 +364,7 @@ while True:
             elif option == 'super_healing_potion':
                 print(f'Drink a [super healing potion]("Legend says only those who are worthy can survive drinking it")({inventory.count('super_healing_potion')}x)')
     try:
+        times_did_something_this_turn = 0
         item_chosen = input('Insert your choice here: ')
         item_chosen_lower = item_chosen.lower()
         item_chosen_replace = item_chosen_lower.replace(' ', '_')
@@ -367,8 +374,9 @@ while True:
                 damage = round(random.uniform(1, 1.25) * (math.sqrt(level**1.2)) * weapon_list[item_chosen_replace])
                 player['damage'] = damage
                 player_damage_dealt = copy.deepcopy(player['damage'])
-
-                use_weapon(item_chosen_replace)
+                
+                if times_did_something_this_turn <= 0:
+                    use_weapon(item_chosen_replace)
 
                 print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
                 enemy_die()
@@ -388,7 +396,8 @@ while True:
         elif item_chosen_replace in potions_list or item_chosen_replace in potions_list:
             if item_chosen_replace in inventory or item_chosen_replace in inventory:
                 item_chosen_replace = item_chosen_lower.replace(' ', '_')
-                use_potion(item_chosen_replace)
+                if times_did_something_this_turn <= 0:
+                    use_potion(item_chosen_replace)
                 enemy_die()
                 if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
             else:
@@ -403,19 +412,25 @@ while True:
                 print(f'Options: ')
                 print(' ')
                 continue
-        for key, value in weapon_list:
+        for key, value in weapon_list.items():
+            if times_did_something_this_turn >= 1:
+                break
             if item_chosen_replace in key:
                 if key in inventory:
+                    option_possibilities.append(key)
                     damage = round(random.uniform(1, 1.25) * (math.sqrt(level**1.2)) * weapon_list[item_chosen_replace])
                     player['damage'] = damage
                     player_damage_dealt = copy.deepcopy(player['damage'])
-
-                    use_weapon(key)
-
-                    print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
-                    enemy_die()
-                    if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
-                    break
+                    if times_did_something_this_turn <= 0:
+                        if len(option_possibilities) < 1:
+                            use_weapon(key)
+                        elif len(option_possibilities) >= 1:
+                            raise SyntaxError
+                            
+                        print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
+                        enemy_die()
+                        if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
+                        break
         
         else:
             clear()
@@ -430,11 +445,18 @@ while True:
             print(' ')
             continue
 
-        for key, value in potions_list:
+        for key, value in potions_list.items():
+            if times_did_something_this_turn >= 1:
+                break
             if item_chosen_replace in key:
                 if key in inventory:
+                    option_possibilities.append(key)
                     item_chosen_replace = item_chosen_lower.replace(' ', '_')
-                    use_potion(item_chosen_replace)
+                    if times_did_something_this_turn <= 0:
+                        if len(option_possibilities) < 1:
+                            use_potion(item_chosen_replace)
+                        elif len(option_possibilities) >= 1:
+                            raise SyntaxError
                     enemy_die()
                     if enemy_health_using['health'] < enemy['max_health']: enemy_attack(enemy['name'])
                     break
@@ -473,3 +495,14 @@ while True:
         print(f'Options: ')
         print(' ')
         continue
+    except SyntaxError:
+        clear()
+        print('Please be more specific(not possible to certainly know which option you mean to use)')
+        print(' ')
+        print(f'What will you do?')
+        print(f'{enemy['name'].capitalize()}´s health: {enemy_health_using["health"]}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
+        print(f'{enemy['name'].capitalize()}´s level: {enemy['level']}')
+        print(f'{player['name']}´s health is now {player['health']}/{player['max_health']}({round((player['health']/player['max_health'])*1000)/10}%)')
+        print(f'{player['name']}´s level: {player['level']}')
+        print(f'Options: ')
+        print(' ')
