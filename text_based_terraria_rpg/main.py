@@ -53,6 +53,19 @@ potion_materials_list = {
     'zombie_heart': 'zombie_heart',
 }
 
+armor_list = (
+    {
+        'copper_helmet': 10,
+        'iron_helmet': 20, 
+        'diamond_helmet': 35,
+    },
+    {
+        'copper_chestplate': 20,
+        'iron_chestplate': 35,
+        'diamond_chestplate': 65,
+    }
+)
+
 def random_enemy(level):
     enemy = {}
     if level == 1:
@@ -94,12 +107,35 @@ def use_weapon(weapon):
     print(f'{player['name']} dealt {player_damage_dealt} damage!')
     print('')
 
+def armor_health_calculation():
+    armor_health = int
+    helmet_options = list()
+    for armor in armor_list:
+        if armor == armor_list[0]:
+
+            for helmet_name, helmet_health in armor_list[0].items():
+                if helmet_name in inventory:
+                    helmet_options.append(helmet_name)
+
+                    if len(helmet_options) > 1:
+                        for helmet in helmet_options:
+
+                            helmet_options_stats = list()
+                            for i in helmet_options:
+                                helmet_options_stats.append(helmet_options[i])
+                            helmet_using = max(helmet_options_stats) # Always the best helmet you have
+    ''' 
+    THIS FUNCTION IS INCOMPLETE(armor_health_calculation())
+    '''
+
 def use_potion(potion):
     global health
     clear()
     base_heal = potions_list[potion]
     bonus_heal = round(0.1 * round(math.sqrt(health**(1+(math.e/10)))))
-    total_heal = base_heal + bonus_heal
+    armor_health = int
+    armor_health_calculation()
+    total_heal = base_heal + bonus_heal + armor_health
     times_did_something_this_turn = 1
     if health >= max_health or health + potions_list[potion] > max_health:
         health = max_health
