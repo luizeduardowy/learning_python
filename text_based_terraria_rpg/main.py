@@ -5,6 +5,8 @@ import copy
 import math
 from clear import clear
 
+armor_health = int
+
 name = input('Insert your character´s name(Press enter to insert your name): ')
 level = 1
 exp = 0
@@ -63,6 +65,16 @@ armor_list = (
         'copper_chestplate': 20,
         'iron_chestplate': 35,
         'diamond_chestplate': 65,
+    },
+    {
+        'copper_leggings': 15,
+        'iron_leggings': 30,
+        'diamond_leggings': 55
+    },
+    {
+        'copper_boots': 10,
+        'iron_boots': 20,
+        'diamond_boots': 35,
     }
 )
 
@@ -108,25 +120,65 @@ def use_weapon(weapon):
     print('')
 
 def armor_health_calculation():
-    armor_health = int
+    armor_health = 0
     helmet_options = list()
-    for armor in armor_list:
-        if armor == armor_list[0]:
+    chestplate_options = list()
+    leggings_options = list()
+    boots_options = list()
 
+    for armor in armor_list:
+
+        if armor == armor_list[0]: # Checks if the armor is a helmet
             for helmet_name, helmet_health in armor_list[0].items():
                 if helmet_name in inventory:
                     helmet_options.append(helmet_name)
-
                     if len(helmet_options) > 1:
+                        
+                        helmet_options_stats = list()
                         for helmet in helmet_options:
 
-                            helmet_options_stats = list()
-                            for i in helmet_options:
-                                helmet_options_stats.append(helmet_options[i])
-                            helmet_using = max(helmet_options_stats) # Always the best helmet you have
-    ''' 
-    THIS FUNCTION IS INCOMPLETE(armor_health_calculation())
-    '''
+                            
+                            for helmet_option in helmet_options:
+                                helmet_options_stats.append(helmet_health)
+                            helmet_using_stat = max(helmet_options_stats) # Always the best helmet you have
+            armor_health += helmet_using_stat
+
+        elif armor == armor_list[1]: # Checks if the armor is a chestplate
+            for chestplate_name, chestplate_health in armor_list[1].items():
+                if chestplate_name in inventory:
+                    chestplate_options.append(chestplate_name)
+                    if len(chestplate_options) > 1:
+                        chestplate_options_stats = list()
+                        for chestplate in chestplate_options:
+
+                            for chestplate_option in chestplate_options:
+                                chestplate_options_stats.append(chestplate_health)
+                            chestplate_using_stat = max(chestplate_options_stats) # Always the best chestplate you have
+            armor_health += chestplate_using_stat
+
+        elif armor == armor_list[2]:
+            for leggings_name, leggings_health in armor_list[2].items():
+                if leggings_name in inventory:
+                    leggings_options.append(leggings_name)
+                    if len(leggings_options) > 1:
+                        leggings_options_stats = list()
+                        for leggings in leggings_options:
+                            for leggings_option in leggings_options:
+                                leggings_options_stats.append(leggings_health)
+                            leggings_using_stat = max(leggings_options_stats) # Always the best leggings you have
+            armor_health += leggings_using_stat
+        
+        elif armor == armor_list[3]:
+            for boots_name, boots_health in armor_list[3].items():
+                if boots_name in inventory:
+                    boots_options.append(boots_name)
+                    if len(boots_options) > 1:
+                        boots_options_stats = list()
+                        for boots in boots_options:
+                            for boots_option in boots_options:
+                                boots_options_stats.append(boots_health)
+                                boots_using_stat = max(boots_options_stats) # Always the best boots you have
+            armor_health += leggings_using_stat
 
 def use_potion(potion):
     global health
@@ -135,7 +187,7 @@ def use_potion(potion):
     bonus_heal = round(0.1 * round(math.sqrt(health**(1+(math.e/10)))))
     armor_health = int
     armor_health_calculation()
-    total_heal = base_heal + bonus_heal + armor_health
+    total_heal = base_heal + bonus_heal
     times_did_something_this_turn = 1
     if health >= max_health or health + potions_list[potion] > max_health:
         health = max_health
@@ -194,7 +246,7 @@ def enemy_die():
         print('You have defeated the enemy')
         print(' ')
         if enemy['name'] == 'slime':
-            exp_gained_slime = round(random.uniform(0.25, 0.4) * exp_needed * math.sqrt(enemy['level']))
+            exp_gained_slime = round(random.uniform(0.25, 0.4) * math.sqrt(level) * math.sqrt(enemy['level']))
             exp += exp_gained_slime
             inventory.append('mushroom')
             print('You got a mushroom!')
@@ -255,7 +307,7 @@ def enemy_die():
             
             
         elif enemy['name'] == 'demon eye':
-            exp_gained_demon_eye = round(random.uniform(0.35, 0.55) * exp_needed * math.sqrt(enemy['level'] ** 1.05))
+            exp_gained_demon_eye = round(random.uniform(0.35, 0.55) * math.sqrt(level) * math.sqrt(enemy['level'] ** 1.05))
             exp += exp_gained_demon_eye
             if random.uniform(0,1) <= 0.3333:
                 inventory.append('len')
@@ -326,7 +378,7 @@ def enemy_die():
 
             
         elif enemy['name'] == 'zombie':
-            exp_gained_zombie = round(random.uniform(0.50, 0.75) * exp_needed * math.sqrt(enemy['level'] ** 1.15))
+            exp_gained_zombie = round(random.uniform(0.50, 0.75) * math.sqrt(level) * math.sqrt(enemy['level'] ** 1.15))
             exp += exp_gained_zombie
             if random.uniform(0, 1) <= 0.090625:
                 inventory.append('zombie_arm')
@@ -335,8 +387,9 @@ def enemy_die():
             exp -= exp_needed
             level += 1
             exp_needed = 9 + round(math.sqrt(level**np.e))
-            max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))))
-            health = max_health
+            armor_health_calculation()
+            max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))) + round(armor_health))
+            health = copy.deepcopy(max_health)
             damage = round(random.uniform(1, 1.25) * math.sqrt(level**1.2))
             print(f'You leveled up! You are now level {level}.')
 
