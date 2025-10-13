@@ -310,6 +310,7 @@ def enemy_die():
             exp_gained_demon_eye = round(random.uniform(0.35, 0.55) * math.sqrt(level) * math.sqrt(enemy['level'] ** 1.05))
             exp += exp_gained_demon_eye
             if random.uniform(0,1) <= 0.3333:
+                clear()
                 inventory.append('len')
                 print('You got a len!')
                 if inventory.count('gel') >= 2 and inventory.count('len'):
@@ -346,9 +347,10 @@ def enemy_die():
                         print('Please insert a valid answer')
                         print('It´s a ValueError')
             elif random.uniform(0, 1) <= 0.2:
+                clear()
                 inventory.append('copper_bar')
                 print('You got a copper bar!')
-                if inventory.count('copper_bar') >= 2 and inventory.count('stick') >= 1:
+                if inventory.count('copper_bar') >= 2 and inventory.count('stick') >= 1: #
                     if inventory.count('copper_sword') < 1:
                         if input('Do you want to use 2 of your copper bars and a stick to make an copper sword\n(type anything for yes(spaces count) and press\n and press enter for no)?'):
                             inventory.remove('stick')
@@ -360,12 +362,58 @@ def enemy_die():
                             print(' ')
                             inventory.append('copper_sword')
                             print('You got an copper sword!')
+                if inventory.count('copper_bar') >= 4: # Copper armor crafting
+
+                    if inventory.count('copper_bar') >= 4 and inventory.count('copper_helmet') < 1: # Copper helmet crafting
+                        if input('Do you want to use 4 of your copper bars and a stick to make an\n copper helmet(type anything for yes(spaces\n count) and press enter for no)?'):
+                            for removing_copper in range(4):
+                                inventory.remove('copper_bar')
+                            print('-4 copper bars')
+                            print(' ')
+                            inventory.append('copper_helmet')
+                            print('You got an copper helmet!')
+                            print(' ')
+
+                    if inventory.count('copper_bar') >= 7 and inventory.count('copper_chestplate') < 1: # Copper chestplate crafting
+                        if input('Do you want to use 7 of your copper bars and a stick to make an\n copper chestplate(type anything for yes(spaces\n count) and press enter for no)?'):
+                            for removing_copper in range(7):
+                                inventory.remove('copper_bar')
+                            clear()
+                            print('-7 copper bars')
+                            print(' ')
+                            inventory.append('copper_chestplate')
+                            print('You got an copper chestplate!')
+                            print(' ')
+
+                    if inventory.count('copper_bar') >= 6 and inventory.count('copper_leggings') < 1: # Copper leggings crafting
+                        if input('Do you want to use 6 of your copper bars and a stick to make a pair \nof copper leggings(type anything for yes(spaces\n count) and press enter for no)?'):
+                            for removing_copper in range(6):
+                                inventory.remove('copper_bar')
+                            clear()
+                            print('-6 copper bars')
+                            print(' ')
+                            inventory.append('copper_leggings')
+                            print('You got a pair of copper leggings')
+                            print(' ')
+
+                    if inventory.count('copper_bar') >= 3 and inventory.count('copper_boots') < 1: # Copper boots crafting
+                        if input('Do you want to use 3 of your copper bars and a stick to make a pair \nof copper boots(type anything for yes(spaces\n count) and press enter for no)?'):
+                            for removing_copper in range(3):
+                                inventory.remove('copper_bar')
+                            clear()
+                            print('-3 copper bars')
+                            print(' ')
+                            inventory.append('copper_boots')
+                            print('You got a pair of copper leggings')
+                            print(' ')
+
             elif random.uniform(0, 1) <= 0.05:
+                clear()
                 inventory.append('iron_bar')
                 print('You got a iron bar!')
                 if inventory.count('iron_bar') >= 2 and inventory.count('copper_sword') >= 1:
-                    if inventory.count('iron_sword') < 1:
-                        if input('Do you want to use 2 of your iron bars and your copper sword\n to make an iron sword(type anything for yes(spaces count) and\n press enter for no)?'):
+                    if inventory.count('iron_sword') < 1: # Iron sword crafting
+                        if input('Do you want to use 2 of your iron bars and your copper sword\n to make an iron sword(type anything for yes(spaces count) and\npress enter for no)?'):
                             inventory.remove('copper_sword')
                             print('-1 copper sword')
                             print(' ')
@@ -376,7 +424,64 @@ def enemy_die():
                             inventory.append('iron_sword')
                             print('You got an iron sword')
 
-            
+                if inventory.count('iron_bar') >= 2: # Iron armor crafting
+
+                    if inventory.count('iron_bar') >= 2 and inventory.count('copper_helmet') >= 1: # Iron helmet crafting
+                        if inventory.count('iron_helmet') < 1:
+                            if input('Do you want to use 2 of your iron bars and your copper helmet\nto make an iron helmet(type anything for yes(spaces count) and\npress enter for no)?'):
+                                inventory.remove('copper_helmet')
+                                print('-1 copper helmet')
+                                print(' ')
+                                for removing_iron in range(2):
+                                    inventory.remove('iron_bar')
+                                print('-2 iron bars')
+                                print(' ')
+                                inventory.append('iron_helmet')
+                                print('You got an iron helmet')
+                                print(' ')
+
+                    if inventory.count('iron_bar') >= 5 and inventory.count('copper_chestplate') >= 1: # Iron chestplate crafting
+                        if inventory.count('iron_chestplate') < 1:
+                            if input('Do you want to use 5 of your iron bars and your copper chestplate\nto make an iron chestplate(type anything for yes(spaces count) and\npress enter for no)?'):
+                                inventory.remove('copper_chestplate')
+                                print('-1 copper chestplate')
+                                print(' ')
+                                for removing_iron in range(5):
+                                    inventory.remove('iron_bar')
+                                print('-5 iron bars')
+                                print(' ')
+                                inventory.append('iron_chestplate')
+                                print('You got an iron chestplate!')
+                                print(' ')
+
+                    if inventory.count('iron_bar') >= 4 and inventory.count('copper_leggings') >= 1: # Iron leggings crafting
+                        if inventory.count('iron_leggings') < 1:
+                            if input('Do you want to use 4 of your iron bars and your pair of copper leggings\n to make a pair of iron leggings(type anything for\nyes(spaces count) and press enter for no)?'):
+                                inventory.remove('copper_leggings')
+                                print('-1 copper leggings')
+                                print(' ')
+                                for removing_iron in range(4):
+                                    inventory.remove('iron_bar')
+                                print('-4 iron bars')
+                                print(' ')
+                                inventory.append('iron_chestplate')
+                                print('You got a pair of iron leggings!')
+                                print(' ')
+
+                    if inventory.count('iron_bar') >= 2 and inventory.count('copper_boots') >= 1: # Iron boots crafting
+                        if inventory.count('iron_boots') < 1:
+                            if input('Do you want to use 2 of your iron bars and your pair of copper boots\n to make a pair of iron boots(type anything for\nyes(spaces count) and press enter for no)?'):
+                                inventory.remove('copper_boots')
+                                print('-1 copper boots')
+                                print(' ')
+                                for removing_iron in range(2):
+                                    inventory.remove('iron_bar')
+                                print('-2 iron bars')
+                                print(' ')
+                                inventory.append('iron_boots')
+                                print('You got a pair of iron boots!')
+                                print(' ')
+
         elif enemy['name'] == 'zombie':
             exp_gained_zombie = round(random.uniform(0.50, 0.75) * math.sqrt(level) * math.sqrt(enemy['level'] ** 1.15))
             exp += exp_gained_zombie
