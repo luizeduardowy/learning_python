@@ -36,11 +36,11 @@ weapon_list = {
     'diamond_sword': random.uniform(6.125, 7.5),
 }
 potions_list = {
-    'mushroom': 5 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
-    'lesser_healing_potion': 10 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
-    'healing_potion': 25 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
-    'greater_healing_potion': 50 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
-    'super_healing_potion': 100 + round(0.1 * round(math.sqrt(health**(1+(math.e/10))))),
+    'mushroom': 5 + round(0.1 * round(math.sqrt(max_health**(1+(math.e/10))))),
+    'lesser_healing_potion': 10 + round(0.1 * round(math.sqrt(max_health**(1+(math.e/10))))),
+    'healing_potion': 25 + round(0.1 * round(math.sqrt(max_health**(1+(math.e/10))))),
+    'greater_healing_potion': 50 + round(0.1 * round(math.sqrt(max_health**(1+(math.e/10))))),
+    'super_healing_potion': 100 + round(0.1 * round(math.sqrt(max_health**(1+(math.e/10))))),
 }
 weapon_materials_list = {
     'copper_bar': 'copper_bar',
@@ -252,14 +252,17 @@ def enemy_die():
             exp += exp_gained_slime
             inventory.append('mushroom')
             print('You got a mushroom!')
+            print(' ')
             if random.uniform(0, 1) <= 0.5:
                 if round(random.uniform(1, 2)) == 1:
                     inventory.append('gel')
                     print('+1 gel')
+                    print(' ')
                 elif round(random.uniform(1, 2)) == 2:
                     inventory.append('gel')
                     inventory.append('gel')
                     print('+2 gel')
+                    print(' ')
                 if inventory.count('gel') >= 2 and inventory.count('len'):
                     try:
                         craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the option exactly right with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything)')
@@ -270,10 +273,13 @@ def enemy_die():
                                 inventory.remove('gel')
                                 inventory.remove('gel')
                                 print('-2 gel')
+                                print(' ')
                                 inventory.remove('len')
                                 print('-1 len')
+                                print(' ')
                                 inventory.append('slime_len')
                                 print('You got a slime len!')
+                                print(' ')
                                 if inventory.count('slime_len') >= 1 and inventory.count('gel') >= 1:
                                     if input(f'Do you want to brew a healing potion with one slime len of yours and one gel\n([type anything] if yes(spaces count)\nand press [enter] if no)?'):
                                         inventory.remove('slime_len')
@@ -302,8 +308,9 @@ def enemy_die():
                     if inventory.count('wooden_sword') < 1:
                         if input('Do you want to use your 2 sticks to make a wooden sword(one of\nthe sticks is conserved in the process)([type anything] if yes(spaces count)and press [enter] if no)? '):
                             inventory.remove('stick')
-                            inventory.append('wooden_sword')
                             print('-1 stick')
+                            print(' ')
+                            inventory.append('wooden_sword')
                             print('You got a wooden sword!')
             print(' ')
             
@@ -315,7 +322,7 @@ def enemy_die():
                 clear()
                 inventory.append('len')
                 print('You got a len!')
-                if inventory.count('gel') >= 2 and inventory.count('len'):
+                if inventory.count('gel') >= 2 and inventory.count('len'): # Slime len crafting
                     try:
                         craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the option exactly right with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything)')
                         craft_option_lower = craft_option.lower()
@@ -325,8 +332,10 @@ def enemy_die():
                                 inventory.remove('gel')
                                 inventory.remove('gel')
                                 print('-2 gel')
+                                print(' ')
                                 inventory.remove('len')
                                 print('-1 len')
+                                print(' ')
                                 inventory.append('slime_len')
                                 print('You got a slime len!')
                                 if inventory.count('slime_len') >= 1 and inventory.count('gel') >= 1:
@@ -337,18 +346,32 @@ def enemy_die():
                                         print('-1 gel')
                                         inventory.append('healing_potion')
                                         print('You got a healing potion!')
+                                if inventory.count('zombie_heart') >= 1 and inventory.count('slime_len') >= 2: # Greater healing potion crafting
+                                    if input('Do you want to use your zombie heart and 2 slime lens to make\na greater healing potion(type anything for yes(spaces\ncount) and press enter for no)?'):
+                                        inventory.remove('zombie_heart')
+                                        print('-1 zombie heart0')
+                                        print(' ')
+                                        for removing_slime_lens in range(2):
+                                            inventory.remove('slime_len')
+                                        print('-2 slime lens')
+                                        print(' ')
+                                        inventory.append('greater_healing_potion')
+                                        print('You got a greater healing potion')
+
                             elif craft_option_replace == 'lesser_healing_potion':
                                 inventory.remove('gel')
                                 inventory.remove('gel')
                                 print('-2 gel')
+                                print(' ')
                                 inventory.remove('len')
                                 print('-1 len')
+                                print(' ')
                                 inventory.append('lesser_healing_potion')
                                 print('You got a lesser healing potion!')
                     except ValueError:
                         print('Please insert a valid answer')
                         print('It´s a ValueError')
-            elif random.uniform(0, 1) <= 0.2:
+            if random.uniform(0, 1) <= 0.2:
                 clear()
                 inventory.append('copper_bar')
                 print('You got a copper bar!')
@@ -409,7 +432,7 @@ def enemy_die():
                             print('You got a pair of copper leggings')
                             print(' ')
 
-            elif random.uniform(0, 1) <= 0.05:
+            if random.uniform(0, 1) <= 0.05:
                 clear()
                 inventory.append('iron_bar')
                 print('You got a iron bar!')
@@ -487,9 +510,26 @@ def enemy_die():
         elif enemy['name'] == 'zombie':
             exp_gained_zombie = round(random.uniform(0.50, 0.75) * math.sqrt(level) * math.sqrt(enemy['level'] ** 1.15))
             exp += exp_gained_zombie
-            if random.uniform(0, 1) <= 0.090625:
+            if random.uniform(0, 1) <= 0.090625: # Zombie arm drop
                 inventory.append('zombie_arm')
                 print('You got a zombie arm!')
+                print(' ')
+            if random.uniform(0, 1) <= 0.075: # Zombie heart drop
+                inventory.append('zombie_heart')
+                print('You got a zombie heart')
+                print(' ')
+                if inventory.count('zombie_heart') >= 1 and inventory.count('slime_len') >= 2: # Greater healing potion crafting
+                    if input('Do you want to use your zombie heart and 2 slime lens to make\na greater healing potion(type anything for yes(spaces\ncount) and press enter for no)?'):
+                        inventory.remove('zombie_heart')
+                        print('-1 zombie heart')
+                        print(' ')
+                        for removing_slime_lens in range(2):
+                            inventory.remove('slime_len')
+                        print('-2 slime lens')
+                        print(' ')
+                        inventory.append('greater_healing_potion')
+                        print('You got a greater healing potion')
+
         while exp >= exp_needed:
             exp -= exp_needed
             level += 1
