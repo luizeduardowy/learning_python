@@ -122,64 +122,18 @@ def use_weapon(weapon=str):
 
 def armor_health_calculation():
     armor_health = 0
-    helmet_options = list()
-    chestplate_options = list()
-    leggings_options = list()
-    boots_options = list()
 
-    for armor in armor_list:
-
-        if armor == armor_list[0]: # Checks if the armor is a helmet
-            for helmet_name, helmet_health in armor_list[0].items():
-                if helmet_name in inventory:
-                    helmet_options.append(helmet_name)
-                    if len(helmet_options) > 1:
-                        
-                        helmet_options_stats = list()
-                        for helmet in helmet_options:
-
-                            
-                            for helmet_option in helmet_options:
-                                helmet_options_stats.append(helmet_health)
-                            helmet_using_stat = max(helmet_options_stats) # Always the best helmet you have
-            armor_health += helmet_using_stat
-
-        elif armor == armor_list[1]: # Checks if the armor is a chestplate
-            for chestplate_name, chestplate_health in armor_list[1].items():
-                if chestplate_name in inventory:
-                    chestplate_options.append(chestplate_name)
-                    if len(chestplate_options) > 1:
-                        chestplate_options_stats = list()
-                        for chestplate in chestplate_options:
-
-                            for chestplate_option in chestplate_options:
-                                chestplate_options_stats.append(chestplate_health)
-                            chestplate_using_stat = max(chestplate_options_stats) # Always the best chestplate you have
-            armor_health += chestplate_using_stat
-
-        elif armor == armor_list[2]:
-            for leggings_name, leggings_health in armor_list[2].items():
-                if leggings_name in inventory:
-                    leggings_options.append(leggings_name)
-                    if len(leggings_options) > 1:
-                        leggings_options_stats = list()
-                        for leggings in leggings_options:
-                            for leggings_option in leggings_options:
-                                leggings_options_stats.append(leggings_health)
-                            leggings_using_stat = max(leggings_options_stats) # Always the best leggings you have
-            armor_health += leggings_using_stat
+    for i in range(len(armor_list)):
+        owned_bonuses = []
+        armor_slot_dict = armor_list[i]
         
-        elif armor == armor_list[3]:
-            for boots_name, boots_health in armor_list[3].items():
-                if boots_name in inventory:
-                    boots_options.append(boots_name)
-                    if len(boots_options) > 1:
-                        boots_options_stats = list()
-                        for boots in boots_options:
-                            for boots_option in boots_options:
-                                boots_options_stats.append(boots_health)
-                                boots_using_stat = max(boots_options_stats) # Always the best boots you have
-            armor_health += leggings_using_stat
+        for name, health_armor in armor_slot_dict.items():
+            if name in inventory:
+                owned_bonuses.append(health_armor)
+        
+        if owned_bonuses:
+            armor_health += max(owned_bonuses)
+    return armor_health
 
 def use_potion(potion):
     global health
@@ -187,7 +141,6 @@ def use_potion(potion):
     clear()
     base_heal = potions_list[potion]
     bonus_heal = round(0.1 * round(math.sqrt(health**(1+(math.e/10)))))
-    armor_health = int
     armor_health_calculation()
     total_heal = base_heal + bonus_heal
     times_did_something_this_turn = 1
@@ -529,13 +482,72 @@ def enemy_die():
                         print(' ')
                         inventory.append('greater_healing_potion')
                         print('You got a greater healing potion')
+            if random.uniform(0, 1) < 0.075:
+                inventory.append('diamond')
+                print('You got an diamond!')
+                print(' ')
+                if inventory.count('diamond') >= 3  and inventory.count('iron_bar') >= 2: # Diamond helmet crafting
+                    if input('Do you want to use 3 of your diamonds and 2 of your iron bars to\nmake a diamond helmet(type anything for yes(spaces count)and\npress enter for no)?'):
+                        for removing_diamonds in range(3):
+                            inventory.remove('diamond')
+                        print('-3 diamonds')
+                        print(' ')
+                        for removing_iron in range(2):
+                            inventory.remove('iron_bar')
+                        print('-2 iron bars')
+                        print(' ')
+                        inventory.append('diamond_helmet')
+                        print('You got a diamond helmet!')
+                        print(' ')
+
+                if inventory.count('diamond') >= 5 and inventory.count('iron_bar') >= 2: # Diamond chestplate crafting
+                    if input('Do you want to use 5 of your diamonds and 2 of your iron bars to\nmake a diamond chestplate(type anything for yes(spaces\ncount)and press enter for no)?'):
+                        for removing_diamonds in range(5):
+                            inventory.remove('diamond')
+                        print('-5 diamonds')
+                        print(' ')
+                        for removing_iron in range(2):
+                            inventory.remove('iron_bar')
+                        print('-2 iron bars')
+                        print(' ')
+                        inventory.append('diamond_chestplate')
+                        print('You got a diamond chestplate')
+                        print(' ')
+
+                if inventory.count('diamond') >= 4 and inventory.count('iron_bar') >= 2: # Diamond leggings crafting
+                    if input('Do you want to use 4 of your diamonds and 2 of your iron bars to\nmake a pair of diamond leggings(type anything for yes(spaces\ncount)and press enter for no)?'):
+                        for removing_diamonds in range(4):
+                            inventory.remove('diamond')
+                        print('-4 diamonds')
+                        print(' ')
+                        for removing_iron in range(2):
+                            inventory.remove('iron_bar')
+                        print('-2 iron bars')
+                        print(' ')
+                        inventory.append('diamond_leggings')
+                        print('You got a pair of diamond leggings!')
+                        print(' ')
+                
+                if inventory.count('diamond') >= 2 and inventory.count('iron_bar') >= 1: # Diamond boots crafting
+                    if input('Do you want to use 2 of your diamonds and 1 of your iron bars to\nmake a pair of diamond boots(type anything for yes(spaces\ncount)and press enter for no)?'):
+                        for removing_diamonds in range(2):
+                            inventory.remove('diamond')
+                        print('-2 diamonds')
+                        print(' ')
+                        inventory.remove('iron_bar')
+                        print('-1 iron bar')
+                        print(' ')
+                        inventory.append('diamond_boots')
+                        print('You got a pair of diamond boots!')
+                        print(' ')
 
         while exp >= exp_needed:
             exp -= exp_needed
             level += 1
             exp_needed = 9 + round(math.sqrt(level**np.e))
-            armor_health_calculation()
-            max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))) + round(armor_health))
+            armor_bonus_health = armor_health_calculation()
+            
+            max_health = round(10 + (level ** 1.15) - round(math.sqrt(math.sqrt(level - level*(np.e/9)))) + round(armor_bonus_health))
             health = copy.deepcopy(max_health)
             damage = round(random.uniform(1, 1.25) * math.sqrt(level**1.2))
             print(f'You leveled up! You are now level {level}.')
@@ -588,7 +600,9 @@ while True:
             elif option == 'zombie_arm':
                 print(f'Attatck the {enemy['name']} with your [zombie arm](gross)')
             elif option == 'iron_sword':
-                 print(f'Slice the {enemy['name']} with your [iron sword]')
+                print(f'Slice the {enemy['name']} with your [iron sword]')
+            elif option == 'diamond_sword':
+                print(f'Slice the {enemy['name']} with you [diamond sword]')
         elif option in potions_list:
             if option == 'mushroom':
                 print(f'Eat a [mushroom](I don`t recommend doing that)({inventory.count('mushroom')}x)')
@@ -603,7 +617,7 @@ while True:
         item_chosen = input('Insert your choice here: ')
         item_chosen_lower = item_chosen.lower()
         item_chosen_replace = item_chosen_lower.replace(' ', '_')
-        
+        options_possibilities = list()
 
 
         
@@ -651,11 +665,11 @@ while True:
                 print(' ')
                 continue
 
-            options_possibilities = list()
-        if item_chosen_replace in inventory:
+            
+        elif item_chosen_replace in inventory:
             options_possibilities.append(item_chosen_replace)
 
-        if not options_possibilities:
+        elif not options_possibilities:
 
             for weapon in weapon_list:
                 if item_chosen_replace in weapon and weapon in inventory:
@@ -665,27 +679,27 @@ while True:
                 if item_chosen_replace in potion and potion in inventory:
                     options_possibilities.append(potion)
 
-        if len(options_possibilities) == 1:
-            item_using = options_possibilities[0]
+            if len(options_possibilities) == 1:
+                item_using = options_possibilities[0]
             
-            if item_using in weapon_list:
-                damage = round(random.uniform(1, 1.25) * math.sqrt(level ** 1.2) * weapon_list[item_using])
-                player['damage'] = damage
-                player_damage_dealt = copy.deepcopy(player['damage'])
-                use_weapon(item_using.replace('_', ' '))
+                if item_using in weapon_list:
+                    damage = round(random.uniform(1, 1.25) * math.sqrt(level ** 1.2) * weapon_list[item_using])
+                    player['damage'] = damage
+                    player_damage_dealt = copy.deepcopy(player['damage'])
+                    use_weapon(item_using.replace('_', ' '))
 
-                print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}')
-                enemy_die()
-                if enemy_health_using['health'] > 0: enemy_attack(enemy['name'])
-            elif item_using in potions_list:
-                use_potion(item_using)
-                enemy_die()
-                if enemy_health_using['health'] > 0: enemy_attack(enemy['name'])
+                    print(f'{enemy['name'].capitalize()}´s health is now {enemy_health_using['health']}/{enemy['max_health']}({round((enemy_health_using['health']/enemy['max_health'])*1000)/10}%)')
+                    enemy_die()
+                    if enemy_health_using['health'] > 0: enemy_attack(enemy['name'])
+                elif item_using in potions_list:
+                    use_potion(item_using)
+                    enemy_die()
+                    if enemy_health_using['health'] > 0: enemy_attack(enemy['name'])
 
-        elif len(options_possibilities) > 1:
-            raise SyntaxError(options_possibilities)
+            elif len(options_possibilities) > 1:
+                raise SyntaxError(options_possibilities)
         
-        else: raise KeyError
+            else: raise KeyError
 
     except KeyError:
         clear()
@@ -705,6 +719,7 @@ while True:
         ambiguous_options = e.args[0]
         for option in ambiguous_options:
             print(f'- {option.replace('_', ' ')}')
+        print(' ')
 
         print(' ')
         print(f'What will you do?')
