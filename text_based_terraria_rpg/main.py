@@ -201,7 +201,7 @@ def enemy_die():
         print('You have defeated the enemy')
         print(' ')
         if enemy['name'] == 'slime':
-            exp_gained_slime = round(random.uniform(0.25, 0.4) * math.sqrt(level) * math.sqrt(enemy['level']))
+            exp_gained_slime = round(random.uniform(1.25, 1.75) * math.sqrt(level) * math.sqrt(enemy['level']))
             exp += exp_gained_slime
             inventory.append('mushroom')
             print('You got a mushroom!')
