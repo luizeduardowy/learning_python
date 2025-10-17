@@ -309,7 +309,23 @@ def enemy_die():
                                         print('-2 slime lens')
                                         print(' ')
                                         inventory.append('greater_healing_potion')
-                                        print('You got a greater healing potion')
+                                        print('You got a greater healing potion!')
+                                        print(' ')
+                                        if inventory.count('greater_healing_potion') >= 1 and inventory.count('zombie_heart') >= 2 and inventory.count('slime_len') >= 1: # Super healing potion
+                                            if input('Do you want to use 1 greater healing potion, 1 zombie heart and 2 slime lens to make\na super healing potion(type anything for yes(spaces\ncount) and press enter for no)?'):
+                                                inventory.remove('greater_healing_potion')
+                                                print('-1 greater healing potion')
+                                                print(' ')
+                                                for removing_zombie_heart in range(2):
+                                                    inventory.remove('zombie_heart')
+                                                print('-2 zombie hearts')
+                                                print(' ')
+                                                inventory.remove('slime_len')
+                                                print('-1 slime len')
+                                                print(' ')
+                                                inventory.append('super_healing_potion')
+                                                print('You got a super healing potion!')
+
 
                             elif craft_option_replace == 'lesser_healing_potion':
                                 inventory.remove('gel')
@@ -371,7 +387,7 @@ def enemy_die():
                             print('-6 copper bars')
                             print(' ')
                             inventory.append('copper_leggings')
-                            print('You got a pair of copper leggings')
+                            print('You got a pair of copper leggings!')
                             print(' ')
 
                     if inventory.count('copper_bar') >= 3 and inventory.count('copper_boots') < 1: # Copper boots crafting
@@ -382,15 +398,15 @@ def enemy_die():
                             print('-3 copper bars')
                             print(' ')
                             inventory.append('copper_boots')
-                            print('You got a pair of copper leggings')
+                            print('You got a pair of copper boots!')
                             print(' ')
 
             if random.uniform(0, 1) <= 0.05:
                 clear()
                 inventory.append('iron_bar')
                 print('You got a iron bar!')
-                if inventory.count('iron_bar') >= 2 and inventory.count('copper_sword') >= 1:
-                    if inventory.count('iron_sword') < 1: # Iron sword crafting
+                if inventory.count('iron_bar') >= 2 and inventory.count('copper_sword') >= 1: # Iron sword crafting
+                    if inventory.count('iron_sword') < 1:
                         if input('Do you want to use 2 of your iron bars and your copper sword\n to make an iron sword(type anything for yes(spaces count) and\npress enter for no)?'):
                             inventory.remove('copper_sword')
                             print('-1 copper sword')
@@ -400,7 +416,7 @@ def enemy_die():
                             print('-2 iron bars')
                             print(' ')
                             inventory.append('iron_sword')
-                            print('You got an iron sword')
+                            print('You got an iron sword!')
 
                 if inventory.count('iron_bar') >= 2: # Iron armor crafting
 
@@ -415,7 +431,7 @@ def enemy_die():
                                 print('-2 iron bars')
                                 print(' ')
                                 inventory.append('iron_helmet')
-                                print('You got an iron helmet')
+                                print('You got an iron helmet!')
                                 print(' ')
 
                     if inventory.count('iron_bar') >= 5 and inventory.count('copper_chestplate') >= 1: # Iron chestplate crafting
@@ -469,7 +485,7 @@ def enemy_die():
                 print(' ')
             if random.uniform(0, 1) <= 0.075: # Zombie heart drop
                 inventory.append('zombie_heart')
-                print('You got a zombie heart')
+                print('You got a zombie heart!')
                 print(' ')
                 if inventory.count('zombie_heart') >= 1 and inventory.count('slime_len') >= 2: # Greater healing potion crafting
                     if input('Do you want to use your zombie heart and 2 slime lens to make\na greater healing potion(type anything for yes(spaces\ncount) and press enter for no)?'):
@@ -481,11 +497,24 @@ def enemy_die():
                         print('-2 slime lens')
                         print(' ')
                         inventory.append('greater_healing_potion')
-                        print('You got a greater healing potion')
+                        print('You got a greater healing potion!')
             if random.uniform(0, 1) < 0.075:
                 inventory.append('diamond')
                 print('You got an diamond!')
                 print(' ')
+                if inventory.count('diamond') >= 2 and inventory.count('iron_bar') >= 1: # Diamond sword crafting
+                    if input('Do you want to use 2 of your diamonds and 1 of your iron bars to\nmake a diamond sword(type anything for yes(spaces count)and\npress enter for no)?'):
+                        for removing_diamonds in range(2):
+                            inventory.remove('diamond')
+                        print('-2 diamonds')
+                        print(' ')
+                        inventory.remove('iron_bar')
+                        print('-1 iron bar')
+                        print(' ')
+                        inventory.append('diamond_sword')
+                        print('You got a diamond sword!')
+                        print(' ')
+
                 if inventory.count('diamond') >= 3  and inventory.count('iron_bar') >= 2: # Diamond helmet crafting
                     if input('Do you want to use 3 of your diamonds and 2 of your iron bars to\nmake a diamond helmet(type anything for yes(spaces count)and\npress enter for no)?'):
                         for removing_diamonds in range(3):
@@ -511,7 +540,7 @@ def enemy_die():
                         print('-2 iron bars')
                         print(' ')
                         inventory.append('diamond_chestplate')
-                        print('You got a diamond chestplate')
+                        print('You got a diamond chestplate!')
                         print(' ')
 
                 if inventory.count('diamond') >= 4 and inventory.count('iron_bar') >= 2: # Diamond leggings crafting
