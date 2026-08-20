@@ -159,7 +159,7 @@ def use_potion(potion):
 def enemy_attack(enemy_):
     player['health'] -= round(enemy['damage'])
     if enemy_ == 'slime':
-        print(f'Slime decides to attack {player['name']} by hopping onto him/her')
+        print(f'Slime decides to attack {player['name']} by jumping him/her')
     elif enemy_ == 'demon eye':
         print(f'Demon eye decides to attack {player['name']} by hitting him/her')
     elif enemy_ == 'zombie':
@@ -218,7 +218,7 @@ def enemy_die():
                     print(' ')
                 if inventory.count('gel') >= 2 and inventory.count('len'):
                     try:
-                        craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the option exactly right with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything)')
+                        craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the exact option you want with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything): ')
                         craft_option_lower = craft_option.lower()
                         craft_option_replace = craft_option_lower.replace(' ', '_')
                         if craft_option_replace:
@@ -277,7 +277,7 @@ def enemy_die():
                 print('You got a len!')
                 if inventory.count('gel') >= 2 and inventory.count('len'): # Slime len crafting
                     try:
-                        craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the option exactly right with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything)')
+                        craft_option = input(f'Do you want to craft a [slime len],\n an [lesser healing potion](both use 2 gel and a len),\n or [nothing](type the exact option you want with or without caps\n(it doesnt matter), or press enter if\n you don´t want to craft anything): ')
                         craft_option_lower = craft_option.lower()
                         craft_option_replace = craft_option_lower.replace(' ', '_')
                         if craft_option_replace:
@@ -621,7 +621,7 @@ while True:
         
         if option in weapon_list:
             if option == 'stick':
-                print(f'Poke the {enemy['name']} with your mighty... [stick]?(why)')
+                print(f'Poke the {enemy['name']} with your mighty... [stick]?')
             elif option == 'wooden_sword':
                 print(f'Attack the {enemy['name']} with your [wooden sword](still just a fancy stick)')
             elif option == 'copper_sword':
