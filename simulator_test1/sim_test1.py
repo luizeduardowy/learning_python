@@ -68,10 +68,10 @@ def gravity(objects):
                 dist = distance(obj["x"], obj["y"], other_obj["x"], other_obj["y"])
                 force = [0, 0, 0]
                 for i in range(3):
-                    if dist[2] >= 0.75:
+                    if dist[2] >= 0.85:
                         force[i] = ((obj["mass"] * other_obj["mass"]) * (dist[i] / dist[2] ** 3))
                     else:
-                        force[i] = 0
+                        force[i] = 0.5
                 obj["speed"]["x"] += (force[0] / obj["mass"]) * gravitational_constant
                 obj["speed"]["y"] += (force[1] / obj["mass"]) * gravitational_constant
                 obj["speed"]["x"] -= (obj["speed"]["x"] * friction)
